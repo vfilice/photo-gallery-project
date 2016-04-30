@@ -1,0 +1,27 @@
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+	font-family: 'Lato', sans-serif;
+	color: #fff;
+}
+
+
+/*-------------------------------------
+---------------------------------------
+			Media Classes
+----------------------------------------
+---------------------------------------*/
+
+
+@media screen and (min-width: 480px) {
+
+}
+
+@media screen and (min-width: 760px) {
+
+
+}
