@@ -9,15 +9,38 @@ body {
 	color: #fff;
 }
 
-.row {
-	max-width: 330px;
-	margin: 0 auto;
+/*-----------Header-Search-Bar-------------*/
+
+header {
+	background: rgba(0,0,0, 0.2);
+	width: 100%;
+	padding: 25px;
+	position: fixed;	
+	text-align: center;
 }
 
-.row .col {
+.search-input {
+	border-radius: 5px;
+    border: 2px solid #ddd;
+    width: 60%;
+    padding: 10px;
+    color: #A8A8A8;
+    font-size: 12pt;
+}
+
+/*-----------Portfolio-Gallery-------------*/
+
+.portfolio-wrapper  {
+	max-width: 330px;
+	margin: 0 auto;
+	padding-top: 92px;
+}
+
+.col {
 	padding: 0 15px;
-}    
-.row .col .square {
+}   
+
+.square {
 	margin-bottom: 25px;
 }
 
@@ -34,17 +57,23 @@ body {
 
 
 @media screen and (min-width: 480px) {
-	.row {
-		max-width: 480px;
+
+	.search-input {
+	    font-size: 13pt;
 	}
 
-	.row .col {
+	.portfolio-wrapper {
+		max-width: 480px;
+		padding-top: 94px;
+	}
+
+	.col {
 	    width: 50%;
 	    padding: 0 15px;
 	    float: left;
 	}   
 
-	.row .col .square {
+	.square {
 		width: 100%;
 		float: left;
 	}
@@ -53,11 +82,17 @@ body {
 
 @media screen and (min-width: 760px) {
 
-	.row {
+	.search-input {
+	    width: 480px;
+	    padding: 15px;
+	    font-size: 16pt;
+	}
+	.portfolio-wrapper  {
 		max-width: 760px;
+		padding-top: 108px;
 	}
 
-	.row .col {
+	.col {
 	    width: 33.3%;
 	    padding: 0 15px;
 	}   
@@ -66,12 +101,20 @@ body {
 
 @media screen and (min-width: 960px) {
 
+	header {
+		padding: 25px;
+	}
 
-	.row {
+	.search-input {
+	    padding: 15px;
+	    font-size: 16pt;
+	}
+
+	.portfolio-wrapper  {
 		max-width: 960px;
 	}
 
-	.row .col {
+	.col {
 	    width: 25%;
 	    padding: 0 30px;
 	}   
