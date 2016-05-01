@@ -9,6 +9,22 @@ body {
 	color: #fff;
 }
 
+.row {
+	max-width: 330px;
+	margin: 0 auto;
+}
+
+.row .col {
+	padding: 0 15px;
+}    
+.row .col .square {
+	margin-bottom: 25px;
+}
+
+.square img {
+	width: 100%;
+}
+
 
 /*-------------------------------------
 ---------------------------------------
@@ -18,10 +34,46 @@ body {
 
 
 @media screen and (min-width: 480px) {
+	.row {
+		max-width: 480px;
+	}
+
+	.row .col {
+	    width: 50%;
+	    padding: 0 15px;
+	    float: left;
+	}   
+
+	.row .col .square {
+		width: 100%;
+		float: left;
+	}
 
 }
 
 @media screen and (min-width: 760px) {
 
+	.row {
+		max-width: 760px;
+	}
+
+	.row .col {
+	    width: 33.3%;
+	    padding: 0 15px;
+	}   
+
+}
+
+@media screen and (min-width: 960px) {
+
+
+	.row {
+		max-width: 960px;
+	}
+
+	.row .col {
+	    width: 25%;
+	    padding: 0 30px;
+	}   
 
 }
