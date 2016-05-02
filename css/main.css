@@ -12,7 +12,7 @@ body {
 /*-----------Header-Search-Bar-------------*/
 
 header {
-	background: rgba(0,0,0, 0.2);
+	background: #fff;
 	width: 100%;
 	padding: 25px;
 	position: fixed;	
@@ -26,6 +26,7 @@ header {
     padding: 10px;
     color: #A8A8A8;
     font-size: 12pt;
+    outline: 0;
 }
 
 /*-----------Portfolio-Gallery-------------*/
@@ -42,10 +43,61 @@ header {
 
 .square {
 	margin-bottom: 25px;
+	text-align: center;
 }
 
 .square img {
+	width: 80%;
+}
+
+/*-----------Portfolio-Gallery-------------*/
+
+#overlay {
+	background: rgba(0, 0, 0, 0.7);
 	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: none;
+	text-align: center;
+}
+
+#overlay img, #overlay p {
+	width: 80%;
+}
+
+#overlay img {
+  	margin-top: 50%; 
+}
+
+#overlay p {
+  	color: #fff;
+  	margin: 1em auto;
+}
+
+#next-btn, #prev-btn {
+	background: url(../images/bg-slider-arrows.png);
+	background-repeat: no-repeat;
+	background-size: 100px 50px;
+	height: 50px;
+	width: 50px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#next-btn {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+	background-position: 0px 0px;
+}
+
+#prev-btn {
+	background-position: 0px 0px;
 }
 
 
@@ -63,7 +115,7 @@ header {
 	}
 
 	.portfolio-wrapper {
-		max-width: 480px;
+		max-width: 460px;
 		padding-top: 94px;
 	}
 
@@ -78,13 +130,26 @@ header {
 		float: left;
 	}
 
-}
+	.square img {
+		width: 100%;
+	}
+
+	#overlay img{
+		margin-top: 20%;
+	}
+
+	#overlay p {
+	    color: #fff;
+	    margin: 1em auto;
+	    font-size: 1.125em;
+    	letter-spacing: 0.03em;
+	}
 
 @media screen and (min-width: 760px) {
 
 	.search-input {
 	    width: 480px;
-	    padding: 15px;
+	    padding: 10px;
 	    font-size: 16pt;
 	}
 	.portfolio-wrapper  {
@@ -95,6 +160,15 @@ header {
 	.col {
 	    width: 33.3%;
 	    padding: 0 15px;
+	}
+
+	#overlay img, #overlay p {
+		width: 60%;
+	}
+
+	#overlay img {
+		margin-top: 10%;
+		width: 60%;  
 	}   
 
 }
@@ -106,7 +180,6 @@ header {
 	}
 
 	.search-input {
-	    padding: 15px;
 	    font-size: 16pt;
 	}
 
