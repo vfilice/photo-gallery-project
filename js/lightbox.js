@@ -1,92 +1,102 @@
-$(document).ready(function(){
-	//When a user cliks on an image
-	var $overlay = $('<div id="overlay"></div>');
-	var $image = $("<img>");
-	var $caption = $("<p></p>");
-	var $nextBtn = $("<div id=next-btn></div>");
-	var $prevBtn = $("<div id=prev-btn></div>");
-	var $overlayBg = $('<div id="overlay-bg"></div>');
-	var $lastClickedCol = null;
+$(document).ready(function() {
+	var $overlay = $('<div id="overlay"></div>'); //This will contain the lighbox
+	var $image = $("<img>"); //This will contain the appropriate image
+	var $caption = $("<p></p>"); //This will contain the caption text
+	var $nextBtn = $("<div id=next-btn></div>"); //This will contain the button to go to the next image
+	var $prevBtn = $("<div id=prev-btn></div>"); //This will contain the button to go to the previous image
+	var $overlayBg = $('<div id="overlay-bg"></div>'); //This will contain the space to click so the user can exit the lightbox
+	
+	var $lastClickedCol = null; //This will track which '.col' div the user is currently on
+	var getCaptionText = function() {
+		return $($lastClickedCol).find("img").attr("alt");
+	}//This function returns the caption for the current image
+		
+	var $portfolioChildren = $(".portfolio-wrapper").children(".col");//Find all the .col children of portfolio-wrapper and put them in an array
+	var $firstImage = $($portfolioChildren[0]);//Get the first item in the array and make it into a jQuery object
+	var $firstImageHref = $firstImage.find("a").attr("href");//Find the href of the $firstImage
+	var $portfolioArr = $portfolioChildren.length;//Find the length of portfolio children
+	var $lastImage = $($portfolioChildren[ $portfolioArr - 1 ]);//Using the length of the array we minus it by one and find the last item in the array and make it into a jQuery object
+	var $lastImageHref = $lastImage.find("a").attr("href"); //Find the href of the $lastImage
 
-	$overlay.append($image); // append the image to the overlay
-	$overlay.append($caption); // append the caption to the overlay
-	$overlay.append($prevBtn); // append the caption to the overlay
-	$overlay.append($nextBtn); // append the caption to the overlay
-	$overlay.append($overlayBg);
-	$('body').append($overlay);// append the overlay to the body
+	$overlay.append($image);//append the image to the overlay
+	$overlay.append($caption);//append the caption to the overlay
+	$overlay.append($prevBtn);//append the prevBtn to the overlay
+	$overlay.append($nextBtn);//append the nextBtn to the overlay
+	$overlay.append($overlayBg);//append the overlayBg to the overlay
+	$('body').append($overlay);//append the overlay to the body
 
-	//Create a click event that listens for when an image is pressed and when
-		//an image is pressed show the overlay
+	//Create a click event that listens for when an image is pressed
 	$(".col").click(function(event){
-		event.preventDefault();
-		//Create a variable that holds the href attribute of the 'a' tag
-		var imageLocation = $(this).find("a").attr("href");
-		$image.attr("src", imageLocation) //Add the attribute to image
+		event.preventDefault();//Prevent the default browser behaviour from happening
+		
+		var imageLocation = $(this).find("a").attr("href"); //Create a variable that holds the href attribute of the 'a' tag
+		$image.attr("src", imageLocation)//The value of imageLocation will be the location of the image
 
-		$lastClickedCol = $(this);
+		$lastClickedCol = $(this);//Set the counter to the current 'col' div
 
-		$overlay.show(); //Show the overlay
+		$overlay.show();//Show the overlay
 
-		//Create a variable that holds the alt tag value of the image child
+		//Get the current caption for the image from the alt tag
 		var captionText = $(this).find("img").attr("alt");
-	  	$caption.text(captionText); //Put the text in the 'p' tag
+	  	$caption.text(captionText);//Put the text in the 'p' tag
 
 	});
 
-	//When the user clicks on an arrow when the overlay is present 
+	//When the user clicks on the next arrow when the overlay is present 
 	$('#next-btn').click(function() {
-	//Change the image to the next or previous one depending on which button they click
-		//Somehow get the next div's 'a' tag href 
-	//Make a variable that tracks what they clicked in
 
-		//Finding all the .col children of portfolio-wrapper and putting them in an array
-		var $portfolioChildren = $(".portfolio-wrapper").children(".col");
-		//We get the current images attribute href
+		//Get the current image's href
 		var currImage = $lastClickedCol.find("a").attr("href");
-		//We get the next images attribute href
+		//Get the next image's attribute href
 		var nextImage = $lastClickedCol.next().find("a").attr("href");
-		//We get the first item in the array and make it into a jQuery object
-		var $firstImage = $($portfolioChildren[0]);
-		//We get the href of the first image
-		var $firstImageHref = $firstImage.find("a").attr("href"); // Were making firstImage into a jQuery object
-		//This finds the length of portfolio children
-		var $portfolioArr = $portfolioChildren.length;
-		//Using the length of the array we minus it by one and find the last item in the array.
-			//And get its href attribute
-		var $lastImage = $($portfolioChildren[ $portfolioArr - 1 ]).find("a").attr("href"); // This is a condensed version similiar to first image
-		//we make the HTML string into a jQuery object
-		console.log($lastImage);
+		
+		console.log($lastImageHref);
 		console.log(currImage);
 
-		//If the last image has the same href as each other
-		if ( $lastImage == currImage ){
-			//Resets lastclicked to the begining
-			console.log("You are on the last one");
+		//If the last image and the current image have the same href
+		if ( $lastImageHref == currImage ){
+			//Reset lastClickedCol to the begining
+			//console.log("You are on the last one");
 			$lastClickedCol = $firstImage;
-			//Populates the lightbox img with the first one
+			//Populate the lightbox img with the first image
 			$image.attr("src", $firstImageHref);
 		} else {
-			//Sets the last clicked column to the next image which is now going to 
-			//currently display in the lightbox
+			//Set the lastClickedCol to the next image
 			$lastClickedCol = $($lastClickedCol).next();
-			//Sets it in the lightbox
+			//Set it in the lightbox
 			$image.attr("src", nextImage);
-		}		
+		}
+		//Get the caption text by running the $captionText function that finds the img alt tag
+			//of the lastClickedCol and returns its value
+		var nextCaptionText = getCaptionText();
+	  	$caption.text(nextCaptionText); 		
 	});
 
-		//When the user clicks on an arrow when the overlay is present 
+	//When the user clicks on the previous arrow 
 	$('#prev-btn').click(function() {
-	//Change the image to the next or previous one depending on which button they click
-		//Somehow get the next div's 'a' tag href 
-	//Make a variable that tracks what they clicked in
-		console.log($lastClickedCol); 
 
+		var currImage = $lastClickedCol.find("a").attr("href");
 		var prevImage = $lastClickedCol.prev().find("a").attr("href");
-		console.log(prevImage);
-		$lastClickedCol = $($lastClickedCol).prev();
-		console.log($lastClickedCol); 
-		$image.attr("src", prevImage)
-		$overlay.show();
+
+		console.log($firstImageHref);
+		console.log(currImage);
+
+		//If the first image and the current image have the same href
+		if ( $firstImageHref == currImage ){
+			//Set lastClickedCol to the last image
+			// console.log("You are on the first one");
+			$lastClickedCol = $lastImage;
+			//Populate the lightbox with the last image
+			$image.attr("src", $lastImageHref);
+		} else {
+			//Set the lastClickedCol to the previous image
+			$lastClickedCol = $($lastClickedCol).prev();
+			//Set it in the lightbox
+			$image.attr("src", prevImage)
+		}
+
+		var prevCaptionText = getCaptionText();
+	  	$caption.text(prevCaptionText); 
 	});
 	
 
