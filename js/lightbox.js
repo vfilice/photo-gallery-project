@@ -107,17 +107,17 @@ $(document).ready(function() {
 		getPrevImage();
 	});
 
-	$("body").keydown(function (e){ 
-	    if(e.which == 37) // left arrow
-	    {
-	    	console.log("left");
-	    	getPrevImage();
-	    }
-	    else if(e.which == 39)    // right arrow
-	    { 
-	    	console.log("right");
-	    	getNextImage();
-	    }
+	//When the user presses the arrow keys
+	$("body").keydown(function (e){
+		if(!$overlay.is(":hidden")){
+			if(e.which == 37) { // left arrow
+				getPrevImage();
+			}
+	    	else if(e.which == 39) { // right arrow
+	    		getNextImage();
+	    	}
+		}
+	   
 	});	
 
 	//When overlay is clicked, overlay is hidden
