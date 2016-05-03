@@ -7,16 +7,71 @@ $(document).ready(function() {
 	var $overlayBg = $('<div id="overlay-bg"></div>'); //This will contain the space to click so the user can exit the lightbox
 	
 	var $lastClickedCol = null; //This will track which '.col' div the user is currently on
-	var getCaptionText = function() {
-		return $($lastClickedCol).find("img").attr("alt");
-	}//This function returns the caption for the current image
-		
 	var $portfolioChildren = $(".portfolio-wrapper").children(".col");//Find all the .col children of portfolio-wrapper and put them in an array
 	var $firstImage = $($portfolioChildren[0]);//Get the first item in the array and make it into a jQuery object
 	var $firstImageHref = $firstImage.find("a").attr("href");//Find the href of the $firstImage
 	var $portfolioArr = $portfolioChildren.length;//Find the length of portfolio children
 	var $lastImage = $($portfolioChildren[ $portfolioArr - 1 ]);//Using the length of the array we minus it by one and find the last item in the array and make it into a jQuery object
 	var $lastImageHref = $lastImage.find("a").attr("href"); //Find the href of the $lastImage
+
+
+	var getCaptionText = function() {
+		return $($lastClickedCol).find("img").attr("alt");
+	}//This function returns the caption for the current image
+		
+	var getNextImage = function() {
+		//Get the current image's href
+		var currImage = $lastClickedCol.find("a").attr("href");
+		//Get the next image's attribute href
+		var nextImage = $lastClickedCol.next().find("a").attr("href");
+		
+		console.log($lastImageHref);
+		console.log(currImage);
+
+		//If the last image and the current image have the same href
+		if ( $lastImageHref == currImage ){
+			//Reset lastClickedCol to the begining
+			//console.log("You are on the last one");
+			$lastClickedCol = $firstImage;
+			//Populate the lightbox img with the first image
+			$image.attr("src", $firstImageHref);
+		} else {
+			//Set the lastClickedCol to the next image
+			$lastClickedCol = $($lastClickedCol).next();
+			//Set it in the lightbox
+			$image.attr("src", nextImage);
+		}
+		//Get the caption text by running the $captionText function that finds the img alt tag
+			//of the lastClickedCol and returns its value
+		var nextCaptionText = getCaptionText();
+	  	$caption.text(nextCaptionText); 	
+	}
+
+	var getPrevImage = function() {
+
+		var currImage = $lastClickedCol.find("a").attr("href");
+		var prevImage = $lastClickedCol.prev().find("a").attr("href");
+
+		console.log($firstImageHref);
+		console.log(currImage);
+
+		//If the first image and the current image have the same href
+		if ( $firstImageHref == currImage ){
+			//Set lastClickedCol to the last image
+			// console.log("You are on the first one");
+			$lastClickedCol = $lastImage;
+			//Populate the lightbox with the last image
+			$image.attr("src", $lastImageHref);
+		} else {
+			//Set the lastClickedCol to the previous image
+			$lastClickedCol = $($lastClickedCol).prev();
+			//Set it in the lightbox
+			$image.attr("src", prevImage)
+		}
+
+		var prevCaptionText = getCaptionText();
+	  	$caption.text(prevCaptionText); 
+	}
 
 	$overlay.append($image);//append the image to the overlay
 	$overlay.append($caption);//append the caption to the overlay
@@ -42,68 +97,34 @@ $(document).ready(function() {
 
 	});
 
-	//When the user clicks on the next arrow when the overlay is present 
-	$('#next-btn').click(function() {
-
-		//Get the current image's href
-		var currImage = $lastClickedCol.find("a").attr("href");
-		//Get the next image's attribute href
-		var nextImage = $lastClickedCol.next().find("a").attr("href");
-		
-		console.log($lastImageHref);
-		console.log(currImage);
-
-		//If the last image and the current image have the same href
-		if ( $lastImageHref == currImage ){
-			//Reset lastClickedCol to the begining
-			//console.log("You are on the last one");
-			$lastClickedCol = $firstImage;
-			//Populate the lightbox img with the first image
-			$image.attr("src", $firstImageHref);
-		} else {
-			//Set the lastClickedCol to the next image
-			$lastClickedCol = $($lastClickedCol).next();
-			//Set it in the lightbox
-			$image.attr("src", nextImage);
-		}
-		//Get the caption text by running the $captionText function that finds the img alt tag
-			//of the lastClickedCol and returns its value
-		var nextCaptionText = getCaptionText();
-	  	$caption.text(nextCaptionText); 		
+	// When the user clicks on the next arrow when the overlay is present 
+	$('#next-btn').click(function() {	
+		getNextImage();	
 	});
 
 	//When the user clicks on the previous arrow 
 	$('#prev-btn').click(function() {
-
-		var currImage = $lastClickedCol.find("a").attr("href");
-		var prevImage = $lastClickedCol.prev().find("a").attr("href");
-
-		console.log($firstImageHref);
-		console.log(currImage);
-
-		//If the first image and the current image have the same href
-		if ( $firstImageHref == currImage ){
-			//Set lastClickedCol to the last image
-			// console.log("You are on the first one");
-			$lastClickedCol = $lastImage;
-			//Populate the lightbox with the last image
-			$image.attr("src", $lastImageHref);
-		} else {
-			//Set the lastClickedCol to the previous image
-			$lastClickedCol = $($lastClickedCol).prev();
-			//Set it in the lightbox
-			$image.attr("src", prevImage)
-		}
-
-		var prevCaptionText = getCaptionText();
-	  	$caption.text(prevCaptionText); 
+		getPrevImage();
 	});
-	
+
+	$("body").keydown(function (e){ 
+	    if(e.which == 37) // left arrow
+	    {
+	    	console.log("left");
+	    	getPrevImage();
+	    }
+	    else if(e.which == 39)    // right arrow
+	    { 
+	    	console.log("right");
+	    	getNextImage();
+	    }
+	});	
 
 	//When overlay is clicked, overlay is hidden
 	$("#overlay-bg").click(function(){
 		$("#overlay").hide();
 	});
+
 
 	
 });
