@@ -10,23 +10,21 @@ $(document).ready(function() {
 	var $portfolioChildren = $(".portfolio-wrapper").children(".col");//Find all the .col children of portfolio-wrapper and put them in an array
 	var $firstImage = $($portfolioChildren[0]);//Get the first item in the array and make it into a jQuery object
 	var $firstImageHref = $firstImage.find("a").attr("href");//Find the href of the $firstImage
-	var $portfolioArr = $portfolioChildren.length;//Find the length of portfolio children
-	var $lastImage = $($portfolioChildren[ $portfolioArr - 1 ]);//Using the length of the array we minus it by one and find the last item in the array and make it into a jQuery object
+	var $portfolioLength = $portfolioChildren.length;//Find the length of portfolio children
+	var $lastImage = $($portfolioChildren[ $portfolioLength - 1 ]);//Using the length of the array we minus it by one and find the last item in the array and make it into a jQuery object
 	var $lastImageHref = $lastImage.find("a").attr("href"); //Find the href of the $lastImage
 
-
+	//This function returns the caption for the current image
 	var getCaptionText = function() {
-		return $($lastClickedCol).find("img").attr("alt");
-	}//This function returns the caption for the current image
-		
+		if ($lastClickedCol.is(":visible")) {
+			return $lastClickedCol.find("img").attr("alt");
+		}
+	}
+	
+	//This function gets the next image when called	
 	var getNextImage = function() {
 		//Get the current image's href
 		var currImage = $lastClickedCol.find("a").attr("href");
-		//Get the next image's attribute href
-		var nextImage = $lastClickedCol.next().find("a").attr("href");
-		
-		console.log($lastImageHref);
-		console.log(currImage);
 
 		//If the last image and the current image have the same href
 		if ( $lastImageHref == currImage ){
@@ -37,7 +35,9 @@ $(document).ready(function() {
 			$image.attr("src", $firstImageHref);
 		} else {
 			//Set the lastClickedCol to the next image
-			$lastClickedCol = $($lastClickedCol).next();
+			$lastClickedCol = $($lastClickedCol.nextAll(":visible")[0]);
+			//Get the next image's attribute href
+			var nextImage = $lastClickedCol.find("a").attr("href");
 			//Set it in the lightbox
 			$image.attr("src", nextImage);
 		}
@@ -47,10 +47,10 @@ $(document).ready(function() {
 	  	$caption.text(nextCaptionText); 	
 	}
 
+	//This function gets the previous image when called	
 	var getPrevImage = function() {
 
 		var currImage = $lastClickedCol.find("a").attr("href");
-		var prevImage = $lastClickedCol.prev().find("a").attr("href");
 
 		console.log($firstImageHref);
 		console.log(currImage);
@@ -64,7 +64,9 @@ $(document).ready(function() {
 			$image.attr("src", $lastImageHref);
 		} else {
 			//Set the lastClickedCol to the previous image
-			$lastClickedCol = $($lastClickedCol).prev();
+			$lastClickedCol = $($lastClickedCol.prevAll(":visible")[0]);
+			//Get the previous image's attribute href
+			var prevImage = $lastClickedCol.find("a").attr("href");
 			//Set it in the lightbox
 			$image.attr("src", prevImage)
 		}
@@ -116,8 +118,7 @@ $(document).ready(function() {
 	    	else if(e.which == 39) { // right arrow
 	    		getNextImage();
 	    	}
-		}
-	   
+		} 
 	});	
 
 	//When overlay is clicked, overlay is hidden
@@ -125,6 +126,40 @@ $(document).ready(function() {
 		$("#overlay").hide();
 	});
 
+	//This functions returns the user's input into the search box
+	var getInputVal = function( a ) {
+		return $("#search").val();
+	};
 
-	
+	$("#search").keyup(function(e) {
+		
+		var colCaptions;//Holds the captions
+
+		//This loop iterates through all the children in .portfolio-wrapper div
+		for ( var i = 0; i < $portfolioChildren.length; i ++ ) {
+			var $colList = $($portfolioChildren[i]);//Stores each iteration through $portfolioChildren
+			var searchVal = getInputVal();//Stores the user's input
+			// console.log($colList);
+			colCaptions = $colList.find("img").attr("alt");
+			// console.log(colCaptions);
+
+			//Conditional looks to see if the value stored in colCaptions matches with searchVal
+			if ( colCaptions.toLowerCase().indexOf(searchVal.toLowerCase()) > -1 ) {
+				//Only run this code block if it's a match, show() the image/s
+				$colList.show(); 
+			} else {
+				//Run this code block if it isn't a match, hide() the .col of the respective images
+				$colList.hide();
+			}
+		}
+
+	});
+
 });
+
+/* When the image reaches the last image when no defined first and last image is present it does
+not loop through
+
+When a first image or last image is present, the other not contained in the search may appear as 
+loop through
+ */
