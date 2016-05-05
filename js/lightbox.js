@@ -8,11 +8,6 @@ $(document).ready(function() {
 	
 	var $lastClickedCol = null; //This will track which '.col' div the user is currently on
 	var $portfolioChildren = $(".portfolio-wrapper").children(".col");//Find all the .col children of portfolio-wrapper and put them in an array
-	var $firstImage = $($portfolioChildren[0]);//Get the first item in the array and make it into a jQuery object
-	var $firstImageHref = $firstImage.find("a").attr("href");//Find the href of the $firstImage
-	var $portfolioLength = $portfolioChildren.length;//Find the length of portfolio children
-	var $lastImage = $($portfolioChildren[ $portfolioLength - 1 ]);//Using the length of the array we minus it by one and find the last item in the array and make it into a jQuery object
-	var $lastImageHref = $lastImage.find("a").attr("href"); //Find the href of the $lastImage
 
 	//This function returns the caption for the current image
 	var getCaptionText = function() {
@@ -23,23 +18,23 @@ $(document).ready(function() {
 	
 	//This function gets the next image when called	
 	var getNextImage = function() {
-		//Get the current image's href
-		var currImage = $lastClickedCol.find("a").attr("href");
 
-		//If the last image and the current image have the same href
-		if ( $lastImageHref == currImage ){
-			//Reset lastClickedCol to the begining
-			//console.log("You are on the last one");
-			$lastClickedCol = $firstImage;
-			//Populate the lightbox img with the first image
-			$image.attr("src", $firstImageHref);
-		} else {
-			//Set the lastClickedCol to the next image
-			$lastClickedCol = $($lastClickedCol.nextAll(":visible")[0]);
-			//Get the next image's attribute href
-			var nextImage = $lastClickedCol.find("a").attr("href");
+		var nextItems = $lastClickedCol.nextAll(":visible");//Get all the visible next items of $lastClickedCol
+		var length_nextItems = nextItems.length;//Find the length of nextItems
+		
+		//If the length is greater than 0, we aren't on the last image 
+		if(length_nextItems > 0){
+			//Set the lastClickedCol to the first item in nextItems
+			$lastClickedCol = $(nextItems[0]);
 			//Set it in the lightbox
-			$image.attr("src", nextImage);
+			$image.attr("src", $lastClickedCol.find("a").attr("href"));
+		}else {
+			//We are on the last image so find the first visible item in list
+			var $firstVisible = $($(".portfolio-wrapper").children(".col:visible")[0]);
+			//Set the lastClickedCol to $firstVisible
+			$lastClickedCol = $firstVisible;
+			//Set it in the lightbox
+			$image.attr("src", $lastClickedCol.find("a").attr("href"));
 		}
 		//Get the caption text by running the $captionText function that finds the img alt tag
 			//of the lastClickedCol and returns its value
@@ -50,27 +45,26 @@ $(document).ready(function() {
 	//This function gets the previous image when called	
 	var getPrevImage = function() {
 
-		var currImage = $lastClickedCol.find("a").attr("href");
+		var prevItems = $lastClickedCol.prevAll(":visible");//Get all the visible previous items of $lastClickedCol
+		var length_prevItems = prevItems.length;//Find the length of prevItems
 
-		console.log($firstImageHref);
-		console.log(currImage);
-
-		//If the first image and the current image have the same href
-		if ( $firstImageHref == currImage ){
-			//Set lastClickedCol to the last image
-			// console.log("You are on the first one");
-			$lastClickedCol = $lastImage;
-			//Populate the lightbox with the last image
-			$image.attr("src", $lastImageHref);
-		} else {
-			//Set the lastClickedCol to the previous image
-			$lastClickedCol = $($lastClickedCol.prevAll(":visible")[0]);
-			//Get the previous image's attribute href
-			var prevImage = $lastClickedCol.find("a").attr("href");
+		//If the length is greater than 0, we aren't on the first image 
+		if ( length_prevItems > 0 ){
+			//Set the lastClickedCol to the first item in prevItems
+			$lastClickedCol = $(prevItems[0]);
 			//Set it in the lightbox
-			$image.attr("src", prevImage)
+			$image.attr("src", $lastClickedCol.find("a").attr("href"));
+		} else {
+			//We are on the first image so find the last visible item in the list
+			var $visibleChildren = $(".portfolio-wrapper").children(".col:visible");
+			var $lastVisible = $($visibleChildren[ $visibleChildren.length - 1 ]);
+			//Set the lastClickedCol to $lastVisible
+			$lastClickedCol = $lastVisible;
+			//Set it in the lightbox
+			$image.attr("src", $lastClickedCol.find("a").attr("href"));
 		}
-
+		//Get the caption text by running the $captionText function that finds the img alt tag
+			//of the lastClickedCol and returns its value
 		var prevCaptionText = getCaptionText();
 	  	$caption.text(prevCaptionText); 
 	}
@@ -142,11 +136,10 @@ $(document).ready(function() {
 			// console.log($colList);
 			colCaptions = $colList.find("img").attr("alt");
 			// console.log(colCaptions);
-
 			//Conditional looks to see if the value stored in colCaptions matches with searchVal
 			if ( colCaptions.toLowerCase().indexOf(searchVal.toLowerCase()) > -1 ) {
 				//Only run this code block if it's a match, show() the image/s
-				$colList.show(); 
+				$colList.show();	
 			} else {
 				//Run this code block if it isn't a match, hide() the .col of the respective images
 				$colList.hide();
@@ -156,10 +149,3 @@ $(document).ready(function() {
 	});
 
 });
-
-/* When the image reaches the last image when no defined first and last image is present it does
-not loop through
-
-When a first image or last image is present, the other not contained in the search may appear as 
-loop through
- */
