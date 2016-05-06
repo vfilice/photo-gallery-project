@@ -122,6 +122,15 @@ header {
     z-index: 1;
 }
 
+/*-----------Video-------------*/
+
+#overlay iframe {
+	margin-top: 10%;
+	border: none;
+	position: relative;
+	z-index: 6;
+}
+
 /*-------------------------------------
 ---------------------------------------
 			Media Classes
