@@ -125,10 +125,12 @@ header {
 /*-----------Video-------------*/
 
 #overlay iframe {
-	margin-top: 10%;
 	border: none;
 	position: relative;
 	z-index: 6;
+	margin-top: 20%;
+	width: 280px;
+	height: 180px;
 }
 
 /*-------------------------------------
@@ -175,6 +177,12 @@ header {
     	letter-spacing: 0.03em;
 	}
 
+	#overlay iframe {
+		margin-top: 10%;
+    	width: 430px;
+    	height: 240px;
+	}
+
 @media screen and (min-width: 760px) {
 
 	.search-input {
@@ -199,7 +207,12 @@ header {
 	#overlay img {
 		margin-top: 10%;
 		width: 60%;  
-	}   
+	} 
+
+	#overlay iframe {
+		width: 520px;
+		height: 315px;
+	}
 
 }
 
@@ -222,7 +235,7 @@ header {
 	    padding: 0 30px;
 	}   
 
-	#overlay img{
+	#overlay img {
 		margin-top: 5%;
 	}
 
