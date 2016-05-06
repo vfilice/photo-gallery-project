@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	var $overlay = $('<div id="overlay"></div>'); //This will contain the lighbox
 	var $image = $("<img>"); //This will contain the appropriate image
+	var $iframe = $('<iframe width="560" height="315"></iframe>'); //This will contain the iframe for the video player
 	var $caption = $("<p></p>"); //This will contain the caption text
 	var $nextBtn = $("<div id=next-btn></div>"); //This will contain the button to go to the next image
 	var $prevBtn = $("<div id=prev-btn></div>"); //This will contain the button to go to the previous image
@@ -8,6 +9,23 @@ $(document).ready(function() {
 	
 	var $lastClickedCol = null; //This will track which '.col' div the user is currently on
 	var $portfolioChildren = $(".portfolio-wrapper").children(".col");//Find all the .col children of portfolio-wrapper and put them in an array
+
+	//This function checks if the link is a video or image
+	var getVideoOrImage = function() {
+		//If it's a video get the video link attribute and make it the iframe src
+		if ( $lastClickedCol.find("a").attr("href") == "#" ) {
+			$iframe.attr("src", $lastClickedCol.find("a").attr("video-link"));
+			//Replace the overlay image with the iframe
+			$("#overlay img").replaceWith($iframe);
+		} else {
+			//Clear the image cache
+			$image.attr("src", '');
+			//This checks if the iframe is showing and replaces it with the image
+			$("#overlay iframe").replaceWith($image);
+			//The src of the image will be the href of the lastClickedCol
+			$image.attr("src", $lastClickedCol.find("a").attr("href"));
+		}
+	}
 
 	//This function returns the caption for the current image
 	var getCaptionText = function() {
@@ -26,15 +44,15 @@ $(document).ready(function() {
 		if(length_nextItems > 0){
 			//Set the lastClickedCol to the first item in nextItems
 			$lastClickedCol = $(nextItems[0]);
-			//Set it in the lightbox
-			$image.attr("src", $lastClickedCol.find("a").attr("href"));
-		}else {
+			//Call the function to see if it's an image or video and set it in the lightbox
+			getVideoOrImage();
+		} else {
 			//We are on the last image so find the first visible item in list
 			var $firstVisible = $($(".portfolio-wrapper").children(".col:visible")[0]);
 			//Set the lastClickedCol to $firstVisible
 			$lastClickedCol = $firstVisible;
-			//Set it in the lightbox
-			$image.attr("src", $lastClickedCol.find("a").attr("href"));
+			//Call the function to see if it's an image or video and set it in the lightbox
+			getVideoOrImage();
 		}
 		//Get the caption text by running the $captionText function that finds the img alt tag
 			//of the lastClickedCol and returns its value
@@ -52,16 +70,16 @@ $(document).ready(function() {
 		if ( length_prevItems > 0 ){
 			//Set the lastClickedCol to the first item in prevItems
 			$lastClickedCol = $(prevItems[0]);
-			//Set it in the lightbox
-			$image.attr("src", $lastClickedCol.find("a").attr("href"));
+			//Call the function to see if it's an image or video and set it in the lightbox
+			getVideoOrImage();
 		} else {
 			//We are on the first image so find the last visible item in the list
 			var $visibleChildren = $(".portfolio-wrapper").children(".col:visible");
 			var $lastVisible = $($visibleChildren[ $visibleChildren.length - 1 ]);
 			//Set the lastClickedCol to $lastVisible
 			$lastClickedCol = $lastVisible;
-			//Set it in the lightbox
-			$image.attr("src", $lastClickedCol.find("a").attr("href"));
+			//Call the function to see if it's an image or video and set it in the lightbox
+			getVideoOrImage();
 		}
 		//Get the caption text by running the $captionText function that finds the img alt tag
 			//of the lastClickedCol and returns its value
@@ -81,7 +99,17 @@ $(document).ready(function() {
 		event.preventDefault();//Prevent the default browser behaviour from happening
 		
 		var imageLocation = $(this).find("a").attr("href"); //Create a variable that holds the href attribute of the 'a' tag
-		$image.attr("src", imageLocation)//The value of imageLocation will be the location of the image
+
+		//This conditional checks if the link is a video or image
+		if (imageLocation == "#") {
+			$iframe.attr("src", $(this).find("a").attr("video-link"));
+			//If it's a video get the video link attribute and make it the iframe src
+			$("#overlay img").replaceWith($iframe);
+		} else {
+			//This checks if the iframe is showing and replaces it with the image
+			$("#overlay iframe").replaceWith($image);
+			$image.attr("src", imageLocation)//The value of imageLocation will be the location of the image
+		}
 
 		$lastClickedCol = $(this);//Set the counter to the current 'col' div
 
@@ -117,6 +145,13 @@ $(document).ready(function() {
 
 	//When overlay is clicked, overlay is hidden
 	$("#overlay-bg").click(function(){
+
+		//This conditional checks if the iframe is visible
+		if ($iframe.is(":visible")) {
+			//If it is visible clear its src attribute, so the video stops playing when hidden
+			$iframe.attr("src", "");
+		}
+
 		$("#overlay").hide();
 	});
 
