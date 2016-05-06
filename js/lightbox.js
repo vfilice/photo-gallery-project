@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	var $overlay = $('<div id="overlay"></div>'); //This will contain the lighbox
 	var $image = $("<img>"); //This will contain the appropriate image
-	var $iframe = $('<iframe width="560" height="315"></iframe>'); //This will contain the iframe for the video player
+	var $iframe = $('<iframe></iframe>'); //This will contain the iframe for the video player
 	var $caption = $("<p></p>"); //This will contain the caption text
 	var $nextBtn = $("<div id=next-btn></div>"); //This will contain the button to go to the next image
 	var $prevBtn = $("<div id=prev-btn></div>"); //This will contain the button to go to the previous image
@@ -174,10 +174,10 @@ $(document).ready(function() {
 			//Conditional looks to see if the value stored in colCaptions matches with searchVal
 			if ( colCaptions.toLowerCase().indexOf(searchVal.toLowerCase()) > -1 ) {
 				//Only run this code block if it's a match, show() the image/s
-				$colList.show();	
+				$colList.fadeIn(1000);
 			} else {
 				//Run this code block if it isn't a match, hide() the .col of the respective images
-				$colList.hide();
+				$colList.fadeOut(800);
 			}
 		}
 
